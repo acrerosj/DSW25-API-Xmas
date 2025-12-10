@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 
-const reindeers = [
+let reindeers = [
     {
         id: 1,
         name: 'Rudolf'
@@ -52,6 +52,19 @@ app.get('/reindeers/:id', (req, res) => {
     res.json(reindeers.find(reindeer => reindeer.id == id));
 })
 
+app.delete('/reindeers/:id', (req, res) => {
+    let id = req.params.id;
+    reindeers = reindeers.filter(reindeer => reindeer.id != id);
+    res.status(204).json({msg: 'Elemento eliminado'});
+})
+
+app.post('/reindeers', (req, res) => {
+    console.log(req.body)
+    const newReindeer = req.body;
+    newReindeer.id = 4;
+    reindeers.push(newReindeer);
+    res.status(201).json(newReindeer);
+})
 
 app.listen(PORT, () => {
     console.log(`La API está escuchando en http://localhost:${PORT}`);
