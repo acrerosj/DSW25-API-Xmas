@@ -62,10 +62,15 @@ app.delete('/reindeers/:id', (req, res) => {
 app.post('/reindeers', (req, res) => {
     console.log('body:', req.body)
     const newReindeer = req.body;
-    let maximo = Math.max(...reindeers.map(r => r.id));
-    newReindeer.id = maximo+1;
-    reindeers.push(newReindeer);
-    res.status(201).json(newReindeer);
+    console.log('longitud:', newReindeer.name.length);
+    if (newReindeer.name.length > 0) {
+        let maximo = Math.max(...reindeers.map(r => r.id));
+        newReindeer.id = maximo+1;
+        reindeers.push(newReindeer);
+        res.status(201).json(newReindeer);
+    } else {
+        res.status(400).json({error: 'Server dice que el nombre está vacío'});
+    }
 })
 
 app.put('/reindeers/:id', (req, res) => {
