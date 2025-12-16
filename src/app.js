@@ -21,6 +21,7 @@ const app = express();
 const PORT = 3000;
 
 app.use(cors());
+app.use(express.json());
 
 // Crear la ruta para ver la documentación.
 let swaggerDocument;
@@ -59,12 +60,21 @@ app.delete('/reindeers/:id', (req, res) => {
 })
 
 app.post('/reindeers', (req, res) => {
-    console.log(req.body)
+    console.log('body:', req.body)
     const newReindeer = req.body;
-    newReindeer.id = 4;
+    let maximo = Math.max(...reindeers.map(r => r.id));
+    newReindeer.id = maximo+1;
     reindeers.push(newReindeer);
     res.status(201).json(newReindeer);
 })
+
+app.put('/reindeers/:id', (req, res) => {
+    let id = req.params.id;
+    let reindeer = reindeers.find(r => r.id == id);
+    console.log(reindeer);
+    reindeer.name = req.body.name;
+    res.status(200).json(reindeer);
+});
 
 app.listen(PORT, () => {
     console.log(`La API está escuchando en http://localhost:${PORT}`);
