@@ -2,20 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 
-let reindeers = [
-    {
-        id: 1,
-        name: 'Rudolf'
-    },
-    {
-        id: 2,
-        name: 'Juank'
-    }, 
-    {
-        id: 3,
-        name: 'Alfonso'
-    }
-];
 
 const app = express();
 const PORT = 3000;
@@ -44,42 +30,8 @@ app.get('/algo',  (req, res) => {
     res.send('<h1>Esto es algo</h1>');
 });
 
-app.get('/reindeers', (req, res) => {
-    res.json(reindeers);
-})
-
-app.get('/reindeers/:id', (req, res) => {
-    let id = req.params.id;
-    res.json(reindeers.find(reindeer => reindeer.id == id));
-})
-
-app.delete('/reindeers/:id', (req, res) => {
-    let id = req.params.id;
-    reindeers = reindeers.filter(reindeer => reindeer.id != id);
-    res.status(204).json({msg: 'Elemento eliminado'});
-})
-
-app.post('/reindeers', (req, res) => {
-    console.log('body:', req.body)
-    const newReindeer = req.body;
-    console.log('longitud:', newReindeer.name.length);
-    if (newReindeer.name.length > 0) {
-        let maximo = Math.max(...reindeers.map(r => r.id));
-        newReindeer.id = maximo+1;
-        reindeers.push(newReindeer);
-        res.status(201).json(newReindeer);
-    } else {
-        res.status(400).json({error: 'Server dice que el nombre está vacío'});
-    }
-})
-
-app.put('/reindeers/:id', (req, res) => {
-    let id = req.params.id;
-    let reindeer = reindeers.find(r => r.id == id);
-    console.log(reindeer);
-    reindeer.name = req.body.name;
-    res.status(200).json(reindeer);
-});
+// Las rutas de los renos están en el archivo routes/reindeers.js
+app.use('/reindeers', require('./routes/reindeers.js'));
 
 app.listen(PORT, () => {
     console.log(`La API está escuchando en http://localhost:${PORT}`);
